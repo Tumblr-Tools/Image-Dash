@@ -2,7 +2,6 @@
   "name": "tumblr-client",
   "version": "0.0.0",
   "description": "rebloggin",
-  "main": "app.js",
   "author": "Andrew Berg",
   "license": "MIT",
   "repository" : { 
@@ -20,5 +19,8 @@
   },
   "devDependencies": {
     "browser-sync": "^2.23.6"
+  },
+  "scripts": {
+    "start": "node app.js"
   }
 }

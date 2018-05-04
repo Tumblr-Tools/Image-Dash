@@ -7,6 +7,8 @@ const passport = require('passport');
 const OAuthStrategy = require('passport-oauth').OAuthStrategy;
 const tumblr = require('tumblr.js');
 
+const PORT = process.env.PORT || 8080;
+
 let client;
 
 passport.use('tumblr', new OAuthStrategy(
@@ -130,4 +132,4 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/login');
 }
 
-app.listen(8080, () => console.log('Tumblr Dash listening on port 8080'));
+app.listen(PORT, () => console.log(`Tumblr Dash listening on port ${PORT}`));
