@@ -18,7 +18,7 @@ passport.use('tumblr', new OAuthStrategy(
     accessTokenURL: 'https://www.tumblr.com/oauth/access_token',
     consumerKey: process.env.CONSUMER_KEY,
     consumerSecret: process.env.CONSUMER_SECRET,
-    callbackURL: 'http://localhost:8080/auth/tumblr/callback'
+    callbackURL: process.env.CALLBACK_URL,
   },
   (token, tokenSecret, profile, done) => {
     client = tumblr.createClient({
