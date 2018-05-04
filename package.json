@@ -1,0 +1,23 @@
+{
+  "name": "tumblr-client",
+  "version": "0.0.0",
+  "description": "rebloggin",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrew Berg",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "passport": "^0.4.0",
+    "passport-oauth": "^1.0.0",
+    "tumblr.js": "^1.1.1"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.23.6"
+  }
+}
