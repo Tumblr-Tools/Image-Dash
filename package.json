@@ -2,12 +2,13 @@
   "name": "tumblr-client",
   "version": "0.0.0",
   "description": "rebloggin",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "main": "app.js",
   "author": "Andrew Berg",
   "license": "MIT",
+  "repository" : { 
+    "type" : "git",
+    "url" : "https://github.com/Tumblr-Tools/Image-Dash.git"
+  },
   "dependencies": {
     "body-parser": "^1.18.2",
     "dotenv": "^5.0.1",
