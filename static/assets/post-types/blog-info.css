@@ -1,0 +1,16 @@
+.blog-info {
+  display: flex;
+  align-items: center;
+  margin: 16px;
+}
+
+.blog-info__avatar {
+  margin-right: 8px;
+}
+
+.blog-info__name:link,
+.blog-info__name:visited {
+  color: #999;
+  flex: 1;
+  text-decoration: none;
+}
