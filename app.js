@@ -6,6 +6,7 @@ const app = express();
 const passport = require('passport');
 const OAuthStrategy = require('passport-oauth').OAuthStrategy;
 const tumblr = require('tumblr.js');
+const browserSync = require('browser-sync');
 
 const PORT = process.env.PORT || 8080;
 
@@ -132,4 +133,20 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/login');
 }
 
-app.listen(PORT, () => console.log(`Tumblr Dash listening on port ${PORT}`));
+const isProduction = process.env.NODE_ENV === 'production';
+
+app.listen(PORT, () => { 
+  console.log(`Tumblr Dash listening on port ${PORT}`);
+  if(!isProduction) {
+    // https://ponyfoo.com/articles/a-browsersync-primer#inside-a-node-application
+    browserSync({
+      files: ['static/**/*.{html,js,css}'],
+      online: false,
+      open: false,
+      port: PORT + 1,
+      proxy: 'localhost:' + PORT,
+      ui: false
+    });
+  }
+    
+});

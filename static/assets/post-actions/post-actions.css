@@ -1,0 +1,37 @@
+@import "./reblog-button.css";
+@import "./like-button.css";
+
+.button-toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.icon-button {
+  background-color: transparent;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  fill: none;
+  margin-left: 4px;
+  padding: 3px;
+  stroke: #666;
+  text-align: center;
+  width: 24px;
+  height: 24px;
+}
+
+.icon-button:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.icon-button:active {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.icon-button:focus {
+  outline: none;
+}
+
+.icon-button svg {
+  pointer-events: none;
+}

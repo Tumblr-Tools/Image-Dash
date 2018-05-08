@@ -1,0 +1,28 @@
+.text {}
+
+.text__heading {
+  font-size: 18px;
+  padding: 0 16px;
+}
+
+.text__body {
+  padding: 0 16px;
+}
+
+.text blockquote {
+  margin: 0;
+}
+
+.text blockquote blockquote {
+  border-left: 2px solid #ccc;
+  padding-left: 8px;
+}
+
+.tmblr-full {
+  width: 250px;
+  margin: 0 -16px;
+}
+
+.tmblr-full img {
+  max-width: 100%;
+}

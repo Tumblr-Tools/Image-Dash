@@ -1,0 +1,49 @@
+.icon-button--like.is-animating .heart {
+  stroke: red;
+  transform: scale(0, 0);
+  transform-origin: center;
+  animation: 300ms cubic-bezier(0.44, 1.8, 0.71, 0.99) 150ms pop-heart;
+}
+
+@keyframes pop-heart {
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+.pop {
+  stroke: none;
+}
+
+.icon-button--like.is-animating .pop {
+  stroke: red;
+  stroke-width: 2;
+}
+
+.icon-button--like.is-animating .pop--diagonal {
+  stroke-dasharray: 10 24;
+  stroke-dashoffset: 17;
+  animation: pop-diagonal 300ms var(--ease-out-quad);
+}
+
+@keyframes pop-diagonal {
+  100% {
+    stroke-dashoffset: -17;
+  }
+}
+
+.icon-button--like.is-animating .pop--horizontal {
+  stroke-dasharray: 3 21;
+  stroke-dashoffset: 12;
+  animation: pop-horizontal 300ms var(--ease-out-quad);
+}
+
+@keyframes pop-horizontal {
+  100% {
+    stroke-dashoffset: -12;
+  }
+}
+
+.icon-button--like.is-success {
+  stroke: red;
+}

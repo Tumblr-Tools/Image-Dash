@@ -1,0 +1,55 @@
+:root {
+  --reblog-duration: 1s;
+}
+
+.border {
+  stroke-dasharray: 18 39;
+  stroke-dashoffset: -4;
+}
+
+.icon-button--reblog:active .border {
+  transition: stroke-dashoffset 125ms ease-out;
+  stroke-dashoffset: -1;
+}
+
+.arrow {
+  position: absolute;
+}
+
+.icon-button:active .arrow {
+  transition: offset-distance 125ms ease-out;
+  offset-distance: -5%;
+}
+
+.arrow--top {
+  offset-path: path("M19 6 Q21 6 21 8 L21 16 Q21 18 19 18 L5 18 Q3 18 3 16 L3 8 Q3 6 5 6 Z");
+}
+
+.arrow--bottom {
+  offset-path: path("M6 18 Q4 18 4 16 L4 8 Q4 6 6 6 L18 6 Q20 6 20 8 L20 16 Q20 18 18 18 Z");
+}
+
+.icon-button--reblog.is-animating .border {
+  animation: dash var(--reblog-duration) var(--ease-out-quad);
+}
+
+@keyframes dash {
+  100% {
+    stroke-dashoffset: -61;
+  }
+}
+
+.icon-button--reblog.is-animating .arrow {
+  animation: arrow var(--reblog-duration) var(--ease-out-quad);
+}
+
+@keyframes arrow {
+  100% {
+    offset-distance: 100%;
+  }
+}
+
+.icon-button--reblog.is-success {
+  stroke: #3fc380;
+  transition: stroke 250ms var(--ease-out-quad);
+}
