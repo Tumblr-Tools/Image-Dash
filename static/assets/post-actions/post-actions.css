@@ -31,3 +31,7 @@
 .icon-button:focus {
   outline: none;
 }
+
+.icon-button svg {
+  pointer-events: none;
+}

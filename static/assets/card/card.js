@@ -21,7 +21,7 @@ const postTemplates = {
 }
 
 export default (post) => {
-  return `<div class="card js-card">
+  return `<div class="card js-card" id="${post.id}" data-reblog-key="${post.reblog_key}">
     <div class="card__body">
       ${postTemplates[post.type](post)}
     </div>

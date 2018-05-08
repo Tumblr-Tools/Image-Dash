@@ -1,11 +1,164 @@
 import cards from './cards/cards.js';
 
+const onLikeClick = (event) => {
+  const el = event.target;
+  const btn = el.closest('.js-like');   
+  const card = el.closest('.js-card');
+  const xhr = new XMLHttpRequest();
+  xhr.open(
+    'POST', 
+    `api/like?id=${card.id}&reblog_key=${card.dataset.reblogKey}`, 
+    true
+  );
+
+  xhr.onreadystatechange = function() {//Call a function when the state changes.
+    //console.log(xhr.readyState, xhr.status);
+    if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+      //console.log('liked');
+      // Request finished. Do processing here.
+    }
+  };
+  xhr.send();
+
+  btn.classList.add('is-animating');
+}
+
+const onReblogClick = (event) => {
+  const el = event.target;
+  const btn = el.closest('.js-reblog');
+  const card = el.closest('.js-card');
+  const xhr = new XMLHttpRequest();
+  xhr.open(
+    'POST', 
+    `api/reblog?id=${card.id}&reblog_key=${card.dataset.reblogKey}`, 
+    true
+  );
+
+  xhr.onreadystatechange = function() {//Call a function when the state changes.
+    //console.log(xhr.readyState, xhr.status);
+    if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+      //console.log('reblogged');
+    }
+  };
+  xhr.send();
+  
+  btn.classList.add('is-animating');
+}
+
+const selectPhoto = (slider, index) => {
+  const previousActive = slider.querySelector('.is-active');
+  const images = slider.querySelector('.js-slider-images');
+  const buttons = slider.querySelector('.js-slider-nav');
+  previousActive && previousActive.classList.remove('is-active');
+  images.style.transform = `translateX(-${250 * index}px)`;
+  buttons.children[index].classList.add('is-active');
+}
+
+const onPhotoClick = (event) => {
+  const el = event.target; 
+  const siblings = el.parentElement.parentElement.children;
+  let index = parseInt(el.dataset.index, 10) + 1;
+  if(index === siblings.length){
+    index = 0;
+  }
+  const slider = el.closest('.js-slider');
+  selectPhoto(slider, index);
+}
+
+const onPhotoNavClick = (event) => {
+  const el = event.target;
+  const index = parseInt(el.dataset.index, 10);
+  const slider = el.closest('.js-slider');
+  selectPhoto(slider, index);
+}
+
+function pixelatePhoto(img, photo, id){
+  const canvas = document.createElement('canvas');
+  canvas.width = img.width;
+  canvas.height = img.height;
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  const size = 0.024;
+  const w = canvas.width * size;
+  const h = canvas.height * size;
+
+  ctx.drawImage(img, 0, 0, w, h);
+  ctx.drawImage(canvas, 0, 0, w, h, 0, 0, canvas.width, canvas.height);
+  canvas.classList.add('photo-container__blurred-image');
+  photo.appendChild(canvas);
+  photo.classList.add('is-blurred');
+}
+
+function hidePhoto(cardId, photoIndex){
+  const photo = document.getElementById(cardId).querySelector('.js-slider-images').children[photoIndex];
+  const img = photo.querySelector('img');
+  if(img.complete && img.naturalHeight !== 0){
+    pixelatePhoto(img, photo, cardId);
+  } else {
+    img.addEventListener('load', () => {
+      pixelatePhoto(img, photo, cardId);
+    });
+  }
+  if(!sessionStorage.getItem(cardId)){
+    sessionStorage.setItem(cardId, photoIndex);
+  }
+}
+
+function showPhoto(cardId, photoIndex){
+  const photo = document.getElementById(cardId).querySelector('.js-slider-images').children[photoIndex];
+  const canvas = photo.querySelector('canvas');
+  photo.removeChild(canvas);
+  photo.classList.remove('is-blurred');
+  sessionStorage.removeItem(cardId);
+}
+
+const onHideImageClick = (event) => {
+  const photoContainer = event.target.closest('.js-photo-container');
+  const photo = photoContainer.querySelector('.js-photo');
+  const card = event.target.closest('.js-card');
+  if(photoContainer.classList.contains('is-blurred')){
+    showPhoto(card.id, photo.dataset.index);
+  } else {
+    hidePhoto(card.id, photo.dataset.index);
+  }
+}
+
+const setHidden = (posts) => {
+  posts.forEach((post) => {
+    var hidden = sessionStorage.getItem(post.id);
+    if(hidden !== null){
+      hidePhoto(post.id, parseInt(hidden, 10));
+    }
+  })
+}
+
 let currentOffset = 0;
 let loading = false;
+const app = document.querySelector('.js-app');
 const loader = document.querySelector('.js-loader');
 
 const render = (posts) => {
-  document.querySelector('.js-app').appendChild(cards(posts));
+  app.appendChild(cards(posts));
+}
+
+const addListeners = () => {
+  const hearts = app.lastElementChild.querySelectorAll('.js-heart');
+  hearts.forEach((heart) => {
+    heart.addEventListener('animationend', function onEnd(event){
+      const btn = event.target.closest('.js-like');
+      btn.classList.remove('is-animating');
+      btn.classList.add('is-success');
+    });
+  });
+
+  const arrows = app.lastElementChild.querySelectorAll('.js-arrow');
+  arrows.forEach((arrow) => {
+    arrow.addEventListener('animationend', function onEnd(event){
+      const btn = event.target.closest('.js-reblog');
+      btn.classList.remove('is-animating');
+      btn.classList.add('is-success');
+    });
+  });
 }
 
 const showLoading = () => {
@@ -37,6 +190,8 @@ const loadNextPage = () => {
     .then(json => {
       hideLoading();
       render(json.posts);
+      setHidden(json.posts);
+      addListeners();
       currentOffset += 18;
       loading = false;
     })
@@ -44,214 +199,56 @@ const loadNextPage = () => {
 
 loadNextPage();
 
-/*
-(function(){
+/* --- CLICK EVENT DELEGATION --- */
 
-  let latestKnownScrollY = 0;
-  let ticking = false;
-
-  function onScroll() {
-    latestKnownScrollY = window.scrollY;
-    requestTick();
+app.addEventListener('click', function (event) {
+  if (event.target.classList.contains('js-like')) {
+    onLikeClick(event);
   }
-
-  function requestTick() {
-    if(!ticking) {
-      requestAnimationFrame(update);
-    }
-    ticking = true;
+  else if (event.target.classList.contains('js-reblog')) {
+    onReblogClick(event);
   }
-
-  function update() {
-    ticking = false;
-    
-    const distance = 500;
-    const currentScrollY = latestKnownScrollY;
-    const pageHeight = document.documentElement.scrollHeight;
-    const clientHeight = document.documentElement.clientHeight;
-    
-    if (pageHeight - (currentScrollY + clientHeight) < distance) {
-      if(!loading){
-        loadNextPage();
-      }
-    }
+  else if (event.target.classList.contains('js-photo')) {
+    onPhotoClick(event);
   }
+  else if (event.target.classList.contains('js-photo-nav')) {
+    onPhotoNavClick(event);
+  }
+  else if (event.target.classList.contains('js-hide-button')) {
+    onHideImageClick(event);
+  }
+})
 
-  window.addEventListener('scroll', onScroll, false);
+/* --- SCROLL SPY --- */
 
+let latestKnownScrollY = 0;
+let ticking = false;
+
+function onScroll() {
+  latestKnownScrollY = window.scrollY;
+  requestTick();
+}
+
+function requestTick() {
+  if(!ticking) {
+    requestAnimationFrame(update);
+  }
+  ticking = true;
+}
+
+function update() {
+  ticking = false;
   
-
-    function onSliderClick(event){
-      const el = event.target;
-      const slider = event.target.closest('.js-slider');
-      const active = slider.querySelector('.is-active');
-      const images = slider.querySelector('.js-slider-images');
-      const nav = slider.querySelector('.js-slider-nav');
-      const siblings = el.parentElement.children;
-      let index = Array.prototype.indexOf.call(siblings, el);
-      if(el.tagName === 'IMG'){
-        index += 1;
-        if(index === siblings.length){
-          index = 0;
-        }
-      }
-      active.classList.remove('is-active');
-      nav.children[index].classList.add('is-active');
-      images.style.transform = `translateX(-${250 * index}px)`;
+  const distance = 500;
+  const currentScrollY = latestKnownScrollY;
+  const pageHeight = document.documentElement.scrollHeight;
+  const clientHeight = document.documentElement.clientHeight;
+  
+  if (pageHeight - (currentScrollY + clientHeight) < distance) {
+    if(!loading){
+      loadNextPage();
     }
-
-    const sliderButtons = document.querySelectorAll('.js-slider-button');
-    if(sliderButtons.length){
-      sliderButtons.forEach((slider) => {
-        if(slider.parentElement.firstElementChild === slider){
-          slider.classList.add('is-active');
-        }
-        slider.addEventListener('click', onSliderClick);
-      });
-    }
-
-    const sliderImages = document.querySelectorAll('.js-slider-images');
-    if(sliderImages.length){
-      sliderImages.forEach((images) => {
-        images.addEventListener('click', onSliderClick);
-      });
-    }
-
-    function onLikeClick(event){
-      const el = event.target;
-      const btn = el.closest('.js-like');   
-      const card = el.closest('.js-card');
-      const xhr = new XMLHttpRequest();
-      xhr.open(
-        'POST', 
-        `api/like?id=${card.id}&reblog_key=${card.dataset.reblogKey}`, 
-        true
-      );
-
-      xhr.onreadystatechange = function() {//Call a function when the state changes.
-        console.log(xhr.readyState, xhr.status);
-        if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-          console.log('liked');
-          // Request finished. Do processing here.
-        }
-      };
-      xhr.send();
-
-      btn.classList.add('is-animating');
-    }
-
-    const likeButtons = document.querySelectorAll('.js-like');
-    if(likeButtons.length){
-      likeButtons.forEach((btn) => {
-        btn.addEventListener('click', onLikeClick);
-      });
-    }
-
-    const hearts = document.querySelectorAll('.js-heart');
-    hearts.forEach((heart) => {
-      heart.addEventListener('animationend', function onEnd(event){
-        const btn = event.target.closest('.js-like');
-        btn.classList.remove('is-animating');
-        btn.classList.add('is-success');
-      });
-    });
-
-    function onReblogClick(event){
-      const el = event.target;
-      const btn = el.closest('.js-reblog');
-      const card = el.closest('.js-card');
-      const xhr = new XMLHttpRequest();
-      xhr.open(
-        'POST', 
-        `api/reblog?id=${card.id}&reblog_key=${card.dataset.reblogKey}`, 
-        true
-      );
-
-      xhr.onreadystatechange = function() {//Call a function when the state changes.
-        console.log(xhr.readyState, xhr.status);
-        if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-          console.log('reblogged');
-          // Request finished. Do processing here.
-        }
-      };
-      xhr.send();
-      
-      btn.classList.add('is-animating');
-
-    }
-
-    const reblogButtons = document.querySelectorAll('.js-reblog');
-    if(reblogButtons.length){
-      reblogButtons.forEach((btn) => {
-        btn.addEventListener('click', onReblogClick);
-      });
-    }
-
-    const arrows = document.querySelectorAll('.js-arrow');
-    arrows.forEach((arrow) => {
-      arrow.addEventListener('animationend', function onEnd(event){
-        const btn = event.target.closest('.js-reblog');
-        btn.classList.remove('is-animating');
-        btn.classList.add('is-success');
-      });
-    });
-
-    function hidePhoto(id){
-      const photo = document.getElementById(id).querySelector('.js-photo');
-      const img = photo.querySelector('img');
-      if(img.complete && img.naturalHeight !== 0){
-        pixelatePhoto(img, photo, id);
-      } else {
-        img.addEventListener('load', () => {
-          pixelatePhoto(img, photo, id);
-        });
-      }
-    }
-
-    function pixelatePhoto(img, photo, id){
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
-      ctx.imageSmoothingEnabled = false;
-      const size = 0.024;
-      const w = canvas.width * size;
-      const h = canvas.height * size;
-
-      ctx.drawImage(img, 0, 0, w, h);
-      ctx.drawImage(canvas, 0, 0, w, h, 0, 0, canvas.width, canvas.height);
-      canvas.classList.add('photo-container__blurred-image');
-      photo.appendChild(canvas);
-      photo.classList.add('is-blurred');
-      if(!sessionStorage.getItem(id)){
-        sessionStorage.setItem(id, 'blurred');
-      }
-    }
-
-    function showPhoto(id){
-      const photo = document.getElementById(id).querySelector('.js-photo');
-      const canvas = photo.querySelector('canvas');
-      photo.removeChild(canvas);
-      photo.classList.remove('is-blurred');
-      sessionStorage.removeItem(id);
-    }
-
-    const hideButtons = document.querySelectorAll('.js-hide-button');
-    hideButtons.forEach((button) => {
-      if(!button.onclick){
-        button.onclick = (event) => {
-          const photo = event.target.closest('.js-photo');
-          const card = event.target.closest('.js-card');
-          if(photo.classList.contains('is-blurred')){
-            showPhoto(card.id);
-          } else {
-            hidePhoto(card.id);
-          }
-        };
-      }
-    });
-
   }
+}
 
-}());
-*/
+window.addEventListener('scroll', onScroll, false);
