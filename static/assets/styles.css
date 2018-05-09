@@ -87,3 +87,29 @@ body {
 .is-hidden {
   display: none;
 }
+
+.back-to-top {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  transition: transform 250ms var(--ease-out-quad);
+}
+
+.back-to-top svg {
+  fill: #999;
+}
+
+.back-to-top:hover svg {
+  fill: #666;
+}
+
+.back-to-top:focus {
+  outline: none;
+}
+
+.back-to-top.is-offscreen {
+  transform: translateY(40px);
+}
