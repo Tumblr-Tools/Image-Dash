@@ -62,12 +62,10 @@ app.get(
 app.get(
   '/api/dashboard',
   (req, res) => {
-    client.userDashboard({
-      limit: req.query.limit,
-      offset: req.query.offset
-    }, (err, resp) => {
-      res.send(resp);
-    });
+    client.userDashboard(
+      req.query, 
+      (err, resp) => { res.send(resp); }
+    );
   }
 );
 
@@ -76,13 +74,8 @@ app.post(
   (req, res) => {
     client.reblogPost(
       req.user.name, 
-      {
-        id: req.query.id,
-        reblog_key: req.query.reblog_key
-      }, 
-      (err, resp) => {
-        res.send(resp);
-      }
+      req.query, 
+      (err, resp) => { res.send(resp); }
     );
   }
 );
@@ -93,9 +86,7 @@ app.post(
     client.likePost(
       req.query.id,
       req.query.reblog_key, 
-      (err, resp) => {
-        res.send(resp);
-      }
+      (err, resp) => { res.send(resp); }
     );
   }
 );
@@ -106,9 +97,7 @@ app.post(
     client.likePost(
       req.query.id,
       req.query.reblog_key, 
-      (err, resp) => {
-        res.send(resp);
-      }
+      (err, resp) => { res.send(resp); }
     );
   }
 );

@@ -133,6 +133,8 @@ const setHidden = (posts) => {
 }
 
 let currentOffset = 0;
+let sinceId;
+let checkNewInterval;
 let loading = false;
 const app = document.querySelector('.js-app');
 const loader = document.querySelector('.js-loader');
@@ -169,7 +171,7 @@ const showLoading = () => {
 
 const hideLoading = () => {
   const placeholder = document.querySelector('.js-placeholder');
-  placeholder &&  document.body.removeChild(placeholder);
+  placeholder &&  placeholder.parentElement.removeChild(placeholder);
   loader.classList.add('is-hidden');
 }
 
@@ -183,6 +185,22 @@ const requestData = async (path) => {
   }
 }
 
+const showNewPostsBanner = (num) => {
+  const banner = document.querySelector('.js-banner');
+  const postCount = document.querySelector('.js-post-count');
+  postCount.textContent = num;
+  banner.classList.remove('is-closed');
+}
+
+const poll = () => {
+  requestData(`/api/dashboard?since_id=${sinceId}`)
+    .then(json => {
+      if(json.posts.length > 0){
+        showNewPostsBanner(json.posts.length);
+      }
+    });
+}
+
 const loadNextPage = () => {
   showLoading();
   loading = true;
@@ -192,6 +210,10 @@ const loadNextPage = () => {
       render(json.posts);
       setHidden(json.posts);
       addListeners();
+      if(currentOffset === 0){
+        sinceId = json.posts[0].id;
+        checkNewInterval = setInterval(poll, 5000);
+      }
       currentOffset += 18;
       loading = false;
     })
