@@ -241,6 +241,13 @@ app.addEventListener('click', function (event) {
   }
 })
 
+/* --- BACK TO TOP --- */
+
+var toTop = document.querySelector('.js-top');
+toTop.onclick = () => {
+  app.scrollIntoView({behavior: 'smooth', block: 'start'});
+} 
+
 /* --- SCROLL SPY --- */
 
 let latestKnownScrollY = 0;
@@ -269,6 +276,17 @@ function update() {
   if (pageHeight - (currentScrollY + clientHeight) < distance) {
     if(!loading){
       loadNextPage();
+    }
+  }
+
+  if (currentScrollY > clientHeight) {
+    if(toTop.classList.contains('is-offscreen')){
+      toTop.classList.remove('is-offscreen');
+    }
+  }
+  else if (currentScrollY < clientHeight) {
+    if(!toTop.classList.contains('is-offscreen')){
+      toTop.classList.add('is-offscreen');
     }
   }
 }
