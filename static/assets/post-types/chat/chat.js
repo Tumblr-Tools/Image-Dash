@@ -1,4 +1,5 @@
-import blogInfo from './blog-info.js';
+import blogInfo from '../blog-info.js';
+import postTemplate from '../post.js';
 
 export default (post) => {
 
@@ -9,10 +10,12 @@ export default (post) => {
     </div>`
   )).join('');
 
-  return `<article class="chat">
-    <div class="chat__body">
-       ${chat}
-    </div>
-    ${blogInfo(post)}
-  </article>`;
-}
+  return (
+    postTemplate({
+      content: `<div class="chat__body">${chat}</div>`,
+      author: blogInfo(post),
+      body: ''
+    })
+  );
+
+};

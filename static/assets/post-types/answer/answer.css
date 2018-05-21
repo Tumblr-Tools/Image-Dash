@@ -1,9 +1,5 @@
-.answer__question,
-.answer__response {
+.answer {
   margin: 16px;
-}
-
-.answer__question {
   display: flex;
 }
 

@@ -21,7 +21,7 @@ const onLikeClick = (event) => {
   xhr.send();
 
   btn.classList.add('is-animating');
-}
+};
 
 const onReblogClick = (event) => {
   const el = event.target;
@@ -78,7 +78,7 @@ function pixelatePhoto(img, photo, id){
   canvas.height = img.height;
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
-  const size = 0.024;
+  const size = 0.04;
   const w = canvas.width * size;
   const h = canvas.height * size;
 

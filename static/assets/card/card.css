@@ -16,9 +16,16 @@
 }
 
 .card__footer {
+  display: flex;
+  align-items: center;
   color: #999;
-  font-size: 12px;
-  padding: 16px;
+  font-size: 11px;
+  padding: 0 16px 16px 16px;
+}
+
+.card__note-count {
+ flex: 1;
+ margin: 0;
 }
 
 .card--placeholder {

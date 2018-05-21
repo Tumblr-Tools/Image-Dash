@@ -1,7 +1,6 @@
 .blog-info {
   display: flex;
   align-items: center;
-  margin: 16px;
 }
 
 .blog-info__avatar {

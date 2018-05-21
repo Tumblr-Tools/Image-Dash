@@ -1,18 +1,20 @@
 @import "cards/cards.css";
 @import "card/card.css";
 @import "post-actions/post-actions.css";
+@import "post-types/post.css";
 @import "post-types/blog-info.css";
-@import "post-types/text.css";
-@import "post-types/photo.css";
-@import "post-types/quote.css";
-@import "post-types/link.css";
-@import "post-types/video.css";
-@import "post-types/audio.css";
-@import "post-types/chat.css";
-@import "post-types/answer.css";
+@import "post-types/text/text.css";
+@import "post-types/photo/photo.css";
+@import "post-types/quote/quote.css";
+@import "post-types/link/link.css";
+@import "post-types/video/video.css";
+@import "post-types/audio/audio.css";
+@import "post-types/chat/chat.css";
+@import "post-types/answer/answer.css";
 
 :root {
   --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --base-spacing: 16px;
 }
 
 *,
@@ -128,9 +130,11 @@ body {
   background-color: #444;
   box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, 1);
   color: #ccc;
-  overflow: hidden;
-  line-height: 48px;
+  font-weight: 300;
+  height: 36px;
+  line-height: 36px;
   text-align: center;
+  overflow: hidden;
   transition: height 500ms var(--ease-out-quad);
 }
 

@@ -1,7 +1,6 @@
-import templateTag from '../util/template-tag.js';
-import blogInfo from './blog-info.js';
-
-const summary = templateTag`<p class="summary">${'summary'}</p>`;
+import templateTag from '../../util/template-tag.js';
+import blogInfo from '../blog-info.js';
+import postTemplate from '../post.js';
 
 const image = templateTag`<div class="photo-container js-photo-container">
   <button class="photo-container__hide-button js-hide-button"></button>
@@ -10,9 +9,9 @@ const image = templateTag`<div class="photo-container js-photo-container">
     src="${'url'}" 
     width="${'width'}" 
     height="${'height'}"
-    data-index="${'index'}" 
+    data-index="${'index'}"
   />
-</div>`
+</div>`;
 
 export default (post) => {
 
@@ -35,12 +34,17 @@ export default (post) => {
     }
   </ul>`;
 
-  return `<figure class="img-slider js-slider">
+  const content = `<figure class="img-slider js-slider">
     <div class="img-slider__images js-slider-images">
       ${imgTags}
     </div>
     ${post.photos.length > 1 ? imgNav : ''}
-  </figure>
-  ${blogInfo(post)}
-  ${summary(post)}`;
+  </figure>`;
+
+  return postTemplate({
+    content: content,
+    author: blogInfo(post),
+    body: post.caption
+  });
+
 };

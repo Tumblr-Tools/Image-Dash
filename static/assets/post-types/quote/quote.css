@@ -1,31 +1,31 @@
-.quote-post__block {
+.quote {
   position: relative;
   z-index: 0;
   margin: 2rem;
   font-size: 18px;
 }
 
-.quote-post__block::before,
-.quote-post__block::after {
+.quote::before,
+.quote::after {
   color: #eee;
   font-size: 48px;
   position: absolute;
   z-index: -1;
 }
 
-.quote-post__block::before {
+.quote::before {
   content: "\275D";
   top: -20px;
   left: -15px;
 }
 
-.quote-post__block::after {
+.quote::after {
   content: "\275E";
   bottom: -20px;
   right: -15px;
 }
 
-.quote-post__footer {
+.quote__footer {
   font-size: 12px;
   margin-top: 1rem;
   text-align: right;

@@ -1,5 +1,13 @@
 .photo-container {
   position: relative;
+  width: 250px;
+  flex-shrink: 0;
+}
+
+.photo-container img {
+  display: block;
+  margin: 0 auto;
+  background-color: #ccc;
 }
 
 .photo-container__hide-button {
@@ -45,9 +53,11 @@
 }
 
 .photo-container__blurred-image {
+  margin: 0 auto;
   position: absolute;
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 2;
 }
 
