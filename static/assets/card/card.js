@@ -20,13 +20,34 @@ const postTemplates = {
   answer: answer,
 }
 
+const formatTime = post => {
+  const d = new Date(post.date);
+  let day = d.getDate();
+  if (day < 10){
+    day = '0' + day;
+  }
+  let month = d.getMonth() + 1;
+  if (month < 10){
+    month = '0' + month;
+  }
+  const year = String(d.getFullYear()).substring(2);
+  const formattedTime = `${month}.${day}.${year}`;
+  return formattedTime;
+};
+
 export default (post) => {
   return `<div class="card js-card" id="${post.id}" data-reblog-key="${post.reblog_key}">
     <div class="card__body">
       ${postTemplates[post.type](post)}
     </div>
     <footer class="card__footer">
-      <p class="card__note-count">${post.note_count}</p>
+      <p class="card__note-count">
+        ${post.note_count}
+        &nbsp;
+        /
+        &nbsp;
+        <a class="card__post-url" href="${post.post_url}">${formatTime(post)}</a>
+      </p>
       ${postActions}
     </footer>
   </div>`;

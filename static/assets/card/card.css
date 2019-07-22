@@ -28,6 +28,15 @@
  margin: 0;
 }
 
+.card__post-url:link,
+.card__post-url:visited {
+  color: #999;
+}
+
+.card__post-url:hover {
+  color: #666;
+}
+
 .card--placeholder {
   height: 350px;
 }

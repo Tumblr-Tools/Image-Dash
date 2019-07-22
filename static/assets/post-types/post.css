@@ -59,3 +59,11 @@
   margin: 0;
   padding-left: 8px;
 }
+
+.post__body .tmblr-full {
+  margin: 0 -26px;
+}
+
+.post__body .tmblr-full img{
+  display: block;
+}

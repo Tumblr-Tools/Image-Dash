@@ -5,6 +5,8 @@
 
 .blog-info__avatar {
   margin-right: 8px;
+  width: 24px;
+  height: 24px;
 }
 
 .blog-info__name:link,

@@ -7,7 +7,7 @@ const body = templateTag`<section class="post__body">${'body'}</section>`;
   
 export default (post) => (
   postTemplate({
-    content: title(post) + body(post),
+    content: post.title ? title(post) : '' + body(post),
     author: blogInfo(post),
     body: ''
   })

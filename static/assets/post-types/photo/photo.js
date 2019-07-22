@@ -3,7 +3,9 @@ import blogInfo from '../blog-info.js';
 import postTemplate from '../post.js';
 
 const image = templateTag`<div class="photo-container js-photo-container">
-  <button class="photo-container__hide-button js-hide-button"></button>
+  <div class="photo-container__hide-hot-area">
+    <button class="photo-container__hide-button js-hide-button"></button>
+  </div>
   <img 
     class="js-photo" 
     src="${'url'}" 

@@ -55,8 +55,14 @@ const selectPhoto = (slider, index) => {
 }
 
 const onPhotoClick = (event) => {
-  const el = event.target; 
+  let el = event.target;
+  if (el.classList.contains('js-photo-container')){
+    el = el.querySelector('.js-photo');
+  }
   const siblings = el.parentElement.parentElement.children;
+  if ( siblings.length === 1 ){
+    return;
+  }
   let index = parseInt(el.dataset.index, 10) + 1;
   if(index === siblings.length){
     index = 0;
@@ -136,6 +142,7 @@ let currentOffset = 0;
 let sinceId;
 let checkNewInterval;
 let loading = false;
+const pollIntervalTime = 1000 * 60 * 3;
 const app = document.querySelector('.js-app');
 const loader = document.querySelector('.js-loader');
 
@@ -212,7 +219,7 @@ const loadNextPage = () => {
       addListeners();
       if(currentOffset === 0){
         sinceId = json.posts[0].id;
-        checkNewInterval = setInterval(poll, 5000);
+        checkNewInterval = setInterval(poll, pollIntervalTime);
       }
       currentOffset += 18;
       loading = false;
@@ -230,7 +237,7 @@ app.addEventListener('click', function (event) {
   else if (event.target.classList.contains('js-reblog')) {
     onReblogClick(event);
   }
-  else if (event.target.classList.contains('js-photo')) {
+  else if (event.target.classList.contains('js-photo') || event.target.classList.contains('js-photo-container')) {
     onPhotoClick(event);
   }
   else if (event.target.classList.contains('js-photo-nav')) {
